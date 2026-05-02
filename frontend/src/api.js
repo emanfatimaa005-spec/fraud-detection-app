@@ -1,0 +1,24 @@
+// api.js - handles all backend API calls
+import axios from 'axios'
+
+const API = axios.create({
+  baseURL: 'http://localhost:5000/api'
+})
+
+// Attach token to every request if it exists
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    req.headers.Authorization = token
+  }
+  return req
+})
+
+// Auth routes
+export const registerUser = (formData) => API.post('/auth/register', formData)
+export const loginUser = (formData) => API.post('/auth/login', formData)
+
+// Transaction routes
+export const addTransaction = (formData) => API.post('/transactions', formData)
+export const getTransactions = () => API.get('/transactions')
+export const getFraudReports = () => API.get('/transactions/fraud-reports')
